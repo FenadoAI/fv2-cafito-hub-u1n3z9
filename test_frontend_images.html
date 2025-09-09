@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Test - Cafito</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .image-card { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .image-card img { width: 100%; height: 150px; object-fit: cover; }
+        .image-card .content { padding: 10px; }
+        .loading { color: #888; }
+        .error { color: #e74c3c; }
+        .success { color: #27ae60; }
+    </style>
+</head>
+<body>
+    <h1>🖼️ Cafito Menu Image Test</h1>
+    <p>Testing if Unsplash images load correctly...</p>
+    
+    <div id="status" class="loading">Loading menu items...</div>
+    <div id="imageGrid" class="image-grid"></div>
+
+    <script>
+        async function testImages() {
+            const statusDiv = document.getElementById('status');
+            const gridDiv = document.getElementById('imageGrid');
+            
+            try {
+                // Fetch menu items
+                const response = await fetch('http://localhost:8001/api/menu');
+                const menuItems = await response.json();
+                
+                statusDiv.innerHTML = `<span class="success">✅ Loaded ${menuItems.length} menu items</span>`;
+                
+                // Test first 8 items
+                const testItems = menuItems.slice(0, 8);
+                
+                testItems.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'image-card';
+                    
+                    const img = document.createElement('img');
+                    img.src = item.image_url;
+                    img.alt = item.name;
+                    
+                    img.onload = () => {
+                        console.log(`✅ Image loaded: ${item.name}`);
+                    };
+                    
+                    img.onerror = () => {
+                        console.log(`❌ Image failed: ${item.name}`);
+                        img.style.display = 'none';
+                        const errorDiv = document.createElement('div');
+                        errorDiv.innerHTML = '❌ Image failed to load';
+                        errorDiv.style.height = '150px';
+                        errorDiv.style.display = 'flex';
+                        errorDiv.style.alignItems = 'center';
+                        errorDiv.style.justifyContent = 'center';
+                        errorDiv.style.backgroundColor = '#f8f8f8';
+                        card.appendChild(errorDiv);
+                    };
+                    
+                    const content = document.createElement('div');
+                    content.className = 'content';
+                    content.innerHTML = `
+                        <h3>${item.name}</h3>
+                        <p>${item.name_ar}</p>
+                        <strong>AED ${item.price}</strong>
+                    `;
+                    
+                    card.appendChild(img);
+                    card.appendChild(content);
+                    gridDiv.appendChild(card);
+                });
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                console.error('Error testing images:', error);
+            }
+        }
+        
+        // Run test when page loads
+        testImages();
+    </script>
+</body>
+</html>

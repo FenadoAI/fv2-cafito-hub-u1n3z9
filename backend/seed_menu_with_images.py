@@ -85,6 +85,7 @@ menu_items = [
         "description_ar": "قهوة عربية باردة منعشة مع التمر",
         "price": 20.0,
         "category": "cold_beverages",
+        "image_url": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     {
@@ -94,6 +95,7 @@ menu_items = [
         "description_ar": "كولد برو ناعم محلى بدبس التمر",
         "price": 24.0,
         "category": "cold_beverages",
+        "image_url": "https://images.unsplash.com/photo-1498804103079-a6351b050096?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     {
@@ -103,6 +105,7 @@ menu_items = [
         "description_ar": "عصير ليمون طازج مع أوراق النعناع",
         "price": 18.0,
         "category": "cold_beverages",
+        "image_url": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     
@@ -114,6 +117,7 @@ menu_items = [
         "description_ar": "حلوى شرق أوسطية تقليدية بالعسل والمكسرات",
         "price": 15.0,
         "category": "pastries",
+        "image_url": "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     {
@@ -123,6 +127,7 @@ menu_items = [
         "description_ar": "كعك محشو بالتمر، مثالي مع القهوة",
         "price": 12.0,
         "category": "pastries",
+        "image_url": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     {
@@ -132,6 +137,7 @@ menu_items = [
         "description_ar": "معجنات الجبن الحلوة مع شراب زهر البرتقال",
         "price": 20.0,
         "category": "pastries",
+        "image_url": "https://images.unsplash.com/photo-1559181567-c3190ca9959b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     
@@ -143,6 +149,7 @@ menu_items = [
         "description_ar": "بيض مسلوق في صلصة الطماطم المتبلة مع الخبز",
         "price": 32.0,
         "category": "breakfast",
+        "image_url": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     {
@@ -152,6 +159,7 @@ menu_items = [
         "description_ar": "حمص، لبنة، زيتون، جبن، وخبز عربي",
         "price": 38.0,
         "category": "breakfast",
+        "image_url": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     
@@ -163,6 +171,7 @@ menu_items = [
         "description_ar": "مكسرات وفواكه مجففة شرق أوسطية فاخرة",
         "price": 25.0,
         "category": "snacks",
+        "image_url": "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     },
     {
@@ -172,6 +181,7 @@ menu_items = [
         "description_ar": "حلوم مشوي مع خضار طازجة في خبز عربي",
         "price": 28.0,
         "category": "snacks",
+        "image_url": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "available": True
     }
 ]
@@ -191,9 +201,9 @@ async def seed_menu():
             item["created_at"] = datetime.utcnow()
             
             await db.menu_items.insert_one(item)
-            print(f"Added: {item['name']}")
+            print(f"Added: {item['name']} - {item['image_url'][:50]}...")
         
-        print(f"\nSuccessfully seeded {len(menu_items)} menu items!")
+        print(f"\nSuccessfully seeded {len(menu_items)} menu items with images!")
         
     except Exception as e:
         print(f"Error seeding menu: {e}")
