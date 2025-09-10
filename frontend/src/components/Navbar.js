@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Coffee, ShoppingCart, Menu } from 'lucide-react';
+import { Coffee, ShoppingCart, Menu, Shield } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -63,6 +63,15 @@ const Navbar = () => {
                     {totalItems}
                   </Badge>
                 )}
+              </Button>
+            </Link>
+            <Link to="/admin">
+              <Button 
+                variant={isActive('/admin') ? 'default' : 'ghost'}
+                className={`${isActive('/admin') ? 'bg-amber-600 hover:bg-amber-700' : 'hover:bg-amber-50'}`}
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Admin
               </Button>
             </Link>
           </div>

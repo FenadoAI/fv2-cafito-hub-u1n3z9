@@ -120,8 +120,14 @@ const MenuPage = () => {
                     src={item.image_url} 
                     alt={item.name}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.log('Image failed to load:', item.image_url);
+                      e.target.style.display = 'none';
+                    }}
+                    onLoad={() => console.log('Image loaded successfully:', item.name)}
                   />
-                ) : (
+                ) : null}
+                {!item.image_url && (
                   <div className="w-full h-full flex items-center justify-center text-white text-6xl font-bold">
                     {item.name.charAt(0)}
                   </div>

@@ -1,10 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Coffee, Star, MapPin, Clock, Phone } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
+import axios from 'axios';
+
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API = `${API_BASE}/api`;
 
 const HomePage = () => {
+  const [featuredItems, setFeaturedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeaturedItems();
+  }, []);
+
+  const fetchFeaturedItems = async () => {
+    try {
+      const response = await axios.get(`${API}/menu`);
+      const allItems = response.data;
+      
+      // Select featured items by category for variety
+      const featured = [
+        allItems.find(item => item.name === "Arabic Coffee (Qahwa)"),
+        allItems.find(item => item.name === "Saffron Latte"),
+        allItems.find(item => item.name === "Rose Cardamom Cappuccino"),
+        allItems.find(item => item.name === "Gold Dust Mocha")
+      ].filter(Boolean); // Remove any undefined items
+      
+      setFeaturedItems(featured);
+    } catch (error) {
+      console.error('Error fetching featured items:', error);
+      // Fallback to static data if API fails
+      setFeaturedItems([
+        {
+          name: "Arabic Coffee (Qahwa)",
+          description: "Traditional cardamom-spiced coffee",
+          price: 15,
+          image_url: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          name: "Saffron Latte",
+          description: "Luxurious latte with premium saffron",
+          price: 28,
+          image_url: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          name: "Rose Cardamom Cappuccino",
+          description: "Aromatic with rose water and cardamom",
+          price: 26,
+          image_url: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        },
+        {
+          name: "Gold Dust Mocha",
+          description: "Luxurious mocha with edible gold",
+          price: 35,
+          image_url: "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -113,41 +171,47 @@ const HomePage = () => {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-amber-400 to-orange-500"></div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2">Arabic Coffee (Qahwa)</h3>
-                <p className="text-gray-600 text-sm mb-2">Traditional cardamom-spiced coffee</p>
-                <p className="text-amber-600 font-bold">AED 15</p>
-              </CardContent>
-            </Card>
-
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-yellow-400 to-amber-500"></div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2">Saffron Latte</h3>
-                <p className="text-gray-600 text-sm mb-2">Luxurious latte with premium saffron</p>
-                <p className="text-amber-600 font-bold">AED 28</p>
-              </CardContent>
-            </Card>
-
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-pink-400 to-rose-500"></div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2">Rose Cardamom Cappuccino</h3>
-                <p className="text-gray-600 text-sm mb-2">Aromatic with rose water and cardamom</p>
-                <p className="text-amber-600 font-bold">AED 26</p>
-              </CardContent>
-            </Card>
-
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-yellow-300 to-yellow-600"></div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2">Gold Dust Mocha</h3>
-                <p className="text-gray-600 text-sm mb-2">Luxurious mocha with edible gold</p>
-                <p className="text-amber-600 font-bold">AED 35</p>
-              </CardContent>
-            </Card>
+            {loading ? (
+              // Loading skeleton
+              Array.from({ length: 4 }, (_, index) => (
+                <Card key={index} className="overflow-hidden">
+                  <div className="h-48 bg-gradient-to-br from-amber-200 to-orange-300 animate-pulse"></div>
+                  <CardContent className="p-4">
+                    <div className="h-4 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                    <div className="h-3 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                    <div className="h-4 bg-amber-200 rounded w-16 animate-pulse"></div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              featuredItems.map((item, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="h-48 relative bg-gradient-to-br from-amber-200 to-orange-300">
+                    {item.image_url ? (
+                      <img 
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.log('Featured image failed to load:', item.image_url);
+                          e.target.style.display = 'none';
+                        }}
+                        onLoad={() => console.log('Featured image loaded:', item.name)}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white text-4xl font-bold">
+                        {item.name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
+                    <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+                    <p className="text-amber-600 font-bold">AED {item.price}</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
           
           <div className="text-center mt-12">
