@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
+import MenuItemCard from '../components/MenuItemCard';
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
 
@@ -41,6 +40,13 @@ const MenuPage = () => {
   const fetchMenu = async () => {
     try {
       const response = await axios.get(`${API}/menu`);
+      console.log('Menu API response:', response.data);
+      
+      // Log image URLs specifically
+      response.data.forEach((item, index) => {
+        console.log(`Item ${index + 1}: ${item.name} - Image: ${item.image_url}`);
+      });
+      
       setMenuItems(response.data);
       setFilteredItems(response.data);
     } catch (error) {
@@ -84,6 +90,16 @@ const MenuPage = () => {
           <p className="text-lg text-gray-500 font-arabic">
             اكتشف أفضل القهوة والأطباق الشرق أوسطية
           </p>
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-4 space-y-2">
+              <a href="/test-images" className="text-sm text-blue-600 hover:underline">
+                🔧 Debug Images
+              </a>
+              <div className="text-xs text-gray-500">
+                Loaded {menuItems.length} items, {menuItems.filter(item => item.image_url).length} with images
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Category Filter */}
@@ -113,65 +129,12 @@ const MenuPage = () => {
         {/* Menu Items Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
-            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-amber-100">
-              <div className="h-48 bg-gradient-to-br from-amber-200 to-orange-300 relative">
-                {item.image_url ? (
-                  <img 
-                    src={item.image_url} 
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      console.log('Image failed to load:', item.image_url);
-                      e.target.style.display = 'none';
-                    }}
-                    onLoad={() => console.log('Image loaded successfully:', item.name)}
-                  />
-                ) : null}
-                {!item.image_url && (
-                  <div className="w-full h-full flex items-center justify-center text-white text-6xl font-bold">
-                    {item.name.charAt(0)}
-                  </div>
-                )}
-                <Badge 
-                  className="absolute top-2 right-2 bg-amber-600 text-white"
-                >
-                  {categories.find(cat => cat.id === item.category)?.name}
-                </Badge>
-              </div>
-              
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 font-arabic mb-2">
-                      {item.name_ar}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-amber-600">
-                      AED {item.price}
-                    </p>
-                  </div>
-                </div>
-                
-                <p className="text-gray-600 mb-2 text-sm">
-                  {item.description}
-                </p>
-                <p className="text-gray-500 mb-4 text-sm font-arabic">
-                  {item.description_ar}
-                </p>
-                
-                <Button 
-                  onClick={() => handleAddToCart(item)}
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add to Cart
-                </Button>
-              </CardContent>
-            </Card>
+            <MenuItemCard
+              key={item.id}
+              item={item}
+              onAddToCart={handleAddToCart}
+              category={categories.find(cat => cat.id === item.category)?.name}
+            />
           ))}
         </div>
 
