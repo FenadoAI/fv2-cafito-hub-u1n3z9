@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Filter } from 'lucide-react';
+import { Plus, Filter } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import MenuItemCard from '../components/MenuItemCard';
+import { Card, CardContent } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
 
