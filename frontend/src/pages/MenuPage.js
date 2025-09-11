@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
+import MenuItemCard from '../components/MenuItemCard';
 import { useCart } from '../context/CartContext';
 import axios from 'axios';
 
@@ -91,6 +90,16 @@ const MenuPage = () => {
           <p className="text-lg text-gray-500 font-arabic">
             اكتشف أفضل القهوة والأطباق الشرق أوسطية
           </p>
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-4 space-y-2">
+              <a href="/test-images" className="text-sm text-blue-600 hover:underline">
+                🔧 Debug Images
+              </a>
+              <div className="text-xs text-gray-500">
+                Loaded {menuItems.length} items, {menuItems.filter(item => item.image_url).length} with images
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Category Filter */}
