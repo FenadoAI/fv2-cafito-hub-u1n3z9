@@ -299,11 +299,10 @@ const HomePage = () => {
                         alt={item.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         onError={(e) => {
-                          console.log('Featured image failed to load:', item.image_url);
                           e.target.style.display = 'none';
                           e.target.nextElementSibling.style.display = 'flex';
                         }}
-                        onLoad={() => console.log('Featured image loaded:', item.name)}
+                        onLoad={() => {}}
                       />
                     ) : null}
                     <div 

@@ -41,13 +41,6 @@ const MenuPage = () => {
   const fetchMenu = async () => {
     try {
       const response = await axios.get(`${API}/menu`);
-      console.log('Menu API response:', response.data);
-      
-      // Log image URLs specifically
-      response.data.forEach((item, index) => {
-        console.log(`Item ${index + 1}: ${item.name} - Image: ${item.image_url}`);
-      });
-      
       setMenuItems(response.data);
       setFilteredItems(response.data);
     } catch (error) {
@@ -138,14 +131,9 @@ const MenuPage = () => {
                     alt={item.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      console.error('Image failed to load for', item.name, ':', item.image_url);
-                      console.error('Error event:', e);
                       e.target.style.display = 'none';
                     }}
-                    onLoad={(e) => {
-                      console.log('✅ Image loaded successfully:', item.name);
-                      console.log('Image dimensions:', e.target.naturalWidth, 'x', e.target.naturalHeight);
-                    }}
+                    onLoad={() => {}}
                     style={{ display: 'block' }}
                   />
                 )}

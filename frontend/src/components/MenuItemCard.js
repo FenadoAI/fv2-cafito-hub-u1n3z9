@@ -9,13 +9,11 @@ const MenuItemCard = ({ item, onAddToCart, category }) => {
   const [imageError, setImageError] = useState(false);
 
   const handleImageLoad = () => {
-    console.log('✅ Image loaded for:', item.name);
     setImageLoaded(true);
     setImageError(false);
   };
 
   const handleImageError = (e) => {
-    console.error('❌ Image failed for:', item.name, item.image_url);
     setImageError(true);
     setImageLoaded(false);
   };
