@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Cafito Images</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .image-test { margin: 20px 0; border: 1px solid #ccc; padding: 10px; }
+        img { max-width: 200px; height: 150px; object-fit: cover; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Cafito Menu Images Test</h1>
+    
+    <div class="image-test">
+        <h3>Arabic Coffee (Qahwa)</h3>
+        <img src="https://storage.googleapis.com/fenado-ai-farm-public/generated/4986d74b-45bb-46c4-acbe-f69d87b30fbe.webp" 
+             alt="Arabic Coffee"
+             onload="this.nextElementSibling.innerHTML='✅ Loaded successfully'"
+             onerror="this.nextElementSibling.innerHTML='❌ Failed to load'">
+        <div>Loading...</div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Saffron Latte</h3>
+        <img src="https://storage.googleapis.com/fenado-ai-farm-public/generated/32712707-1160-423d-8f97-f7b23790d65d.webp" 
+             alt="Saffron Latte"
+             onload="this.nextElementSibling.innerHTML='✅ Loaded successfully'"
+             onerror="this.nextElementSibling.innerHTML='❌ Failed to load'">
+        <div>Loading...</div>
+    </div>
+    
+    <div class="image-test">
+        <h3>Baklava</h3>
+        <img src="https://storage.googleapis.com/fenado-ai-farm-public/generated/d58d7962-5669-48cc-9504-4bdb4988af6b.webp" 
+             alt="Baklava"
+             onload="this.nextElementSibling.innerHTML='✅ Loaded successfully'"
+             onerror="this.nextElementSibling.innerHTML='❌ Failed to load'">
+        <div>Loading...</div>
+    </div>
+    
+    <script>
+        console.log('Testing image accessibility...');
+        
+        // Test with fetch API
+        const testUrls = [
+            'https://storage.googleapis.com/fenado-ai-farm-public/generated/4986d74b-45bb-46c4-acbe-f69d87b30fbe.webp',
+            'https://storage.googleapis.com/fenado-ai-farm-public/generated/32712707-1160-423d-8f97-f7b23790d65d.webp'
+        ];
+        
+        testUrls.forEach(async (url, index) => {
+            try {
+                const response = await fetch(url);
+                console.log(`Image ${index + 1}: Status ${response.status}, Type: ${response.headers.get('content-type')}`);
+            } catch (error) {
+                console.error(`Image ${index + 1} fetch error:`, error);
+            }
+        });
+    </script>
+</body>
+</html>

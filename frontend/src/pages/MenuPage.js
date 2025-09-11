@@ -41,6 +41,13 @@ const MenuPage = () => {
   const fetchMenu = async () => {
     try {
       const response = await axios.get(`${API}/menu`);
+      console.log('Menu API response:', response.data);
+      
+      // Log image URLs specifically
+      response.data.forEach((item, index) => {
+        console.log(`Item ${index + 1}: ${item.name} - Image: ${item.image_url}`);
+      });
+      
       setMenuItems(response.data);
       setFilteredItems(response.data);
     } catch (error) {
@@ -114,26 +121,31 @@ const MenuPage = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
             <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-amber-100">
-              <div className="h-48 bg-gradient-to-br from-amber-200 to-orange-300 relative">
-                {item.image_url ? (
+              <div className="h-48 bg-gradient-to-br from-amber-200 to-orange-300 relative overflow-hidden">
+                {item.image_url && (
                   <img 
                     src={item.image_url} 
                     alt={item.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      console.log('Image failed to load:', item.image_url);
+                      console.error('Image failed to load for', item.name, ':', item.image_url);
+                      console.error('Error event:', e);
                       e.target.style.display = 'none';
                     }}
-                    onLoad={() => console.log('Image loaded successfully:', item.name)}
+                    onLoad={(e) => {
+                      console.log('✅ Image loaded successfully:', item.name);
+                      console.log('Image dimensions:', e.target.naturalWidth, 'x', e.target.naturalHeight);
+                    }}
+                    style={{ display: 'block' }}
                   />
-                ) : null}
+                )}
                 {!item.image_url && (
                   <div className="w-full h-full flex items-center justify-center text-white text-6xl font-bold">
                     {item.name.charAt(0)}
                   </div>
                 )}
                 <Badge 
-                  className="absolute top-2 right-2 bg-amber-600 text-white"
+                  className="absolute top-2 right-2 bg-amber-600 text-white z-10"
                 >
                   {categories.find(cat => cat.id === item.category)?.name}
                 </Badge>
